@@ -286,8 +286,19 @@ class User
         //the above array store objects of Policy class
 
         void showDetails(){
-            cout << "***** USER DETAILS *****" << endl;
+            cout << "\n******* USER DETAILS *******" << endl;
             cout << "NAME ........ " << name << endl;
+            cout << "PHONE ....... " << contactNumber << endl;
+            cout << "EMAIL ....... " << email << endl;
+            cout << "Press 1 To Show More Details Otherwise 0: ";
+            int ch;
+            cin >> ch;
+            if(ch==1)
+            {
+                cout << "D.O.B ....... " << dob << endl;
+                cout << "ADDRESS ..... " << address << endl;
+                cout << "POLICIES .... " << policycount << endl;
+            }
         }
         void newPolicy(){}
         void saveToAuthFile(){
@@ -326,7 +337,7 @@ class User
         }
 };
 
-void export_userobject(string usertoken, User obj)
+void export_userprofile(string usertoken, User obj)
 {
     string path = "./data/" + usertoken + "_userprofile.txt";
     string line;
@@ -341,7 +352,7 @@ void export_userobject(string usertoken, User obj)
     dob
     address
     contactNumber
-    number of policies
+    policycount
     */
     fstream myfileI;
     myfileI.open(path, fstream::app);
@@ -353,14 +364,31 @@ void export_userobject(string usertoken, User obj)
     else cout << "Unable to open file for writing";
 }
 
-User import_userobject(string usertoken)
+User import_userprofile(string usertoken)
 {
     User obj;
-    string path = "./data/" + usertoken + ".ros";
-    ifstream ifs(path, ios::binary);
-    cout << sizeof(obj) << endl;
-    ifs.read((char *)&obj, sizeof(obj));
-    cout << obj.name << "...\n";
+    string line;
+    string path = "./data/" + usertoken + "_userprofile.txt";
+    fstream myfileO;
+    myfileO.open(path);
+    if (myfileO.is_open())
+    {
+        getline (myfileO,line);
+        obj.name = line;
+        getline (myfileO,line);
+        obj.email = line;
+        getline (myfileO,line);
+        obj.dob = line;
+        getline (myfileO,line);
+        obj.address = line;
+        getline (myfileO,line);
+        obj.contactNumber = line;
+        getline (myfileO,line);
+        obj.policycount = stoi(line);
+        myfileO.close();
+    }
+    
+    else cout << "Unable to open file for reading";
     return obj;
 
 }
@@ -449,8 +477,8 @@ void login()
         cout << "Login Successful" << endl;
         // After login activities
         string usertoken = getUserToken(useremail);
-        User user = import_userobject(usertoken);
-        
+        User user = import_userprofile(usertoken);
+        user.showDetails();
     }
     else
     {
@@ -490,7 +518,7 @@ void signup()
     getline(cin, userobj.contactNumber);
     userobj.saveToAuthFile();
     userobj.saveToTokenFile();
-    export_userobject(to_string(userobj.userToken), userobj);
+    export_userprofile(to_string(userobj.userToken), userobj);
     cout << "REGISTRATION SUCCESSFUL. LOGIN AGAIN TO CONTINUE.\n";
 }
 
