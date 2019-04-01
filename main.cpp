@@ -269,66 +269,101 @@ public:
             }
         }
     }
-
 };
 
 class User
 {
-public:
-    string name;
-    string email;
-    int userToken; //this should be a private member later, will be randomly generated
-    string password; //only alphanumeric, no special characters
-    string address;
-    string contactNumber;
-    Policy policyRecord[50]; //a user can create maximum 50 policies
-    //the above array store objects of Policy class
+    public:
+        string name; //user's full name
+        string email; //user's email
+        int userToken; //this should be a private member later, will be randomly generated
+        string password; //only alphanumeric, no special characters
+        string dob; //date of birth
+        string address; //address
+        string contactNumber; //contact
+        string policyRecord[10]; //a user can create maximum 10 policies
+        int policycount = 0;
+        //the above array store objects of Policy class
 
-    /*
-    Please add more terms as per requirement
-    */
-
-    /*
-    Add relevant methods here related to policies
-    */
-    void showDetails(){}
-    void newPolicy(){}
-    void deletePolicy(){}
-    void saveToAuthFile(){
-        /*
-        Takes in email and password
-        and stores them in AUTH.txt file
-        */
-        fstream myfile;
-        myfile.open("./data/AUTH.txt", fstream::app);
-        if (myfile.is_open())
-        {
-            myfile << email; // not sure if it will work!
-            myfile << "\n";
-            myfile << password; //not sure if it will work!
-            myfile << "\n";
-            myfile.close();
+        void showDetails(){
+            cout << "***** USER DETAILS *****" << endl;
+            cout << "NAME ........ " << name << endl;
         }
-        else cout << "Unable to open AUTH file for saving";
-    }
-    void saveToTokenFile(){
-        /*
-        Takes in email and token
-        and stores them in TOKEN.txt file
-        */
-        fstream myfile;
-        myfile.open("./data/TOKEN.txt", fstream::app);
-        if (myfile.is_open())
-        {
-            myfile << email; // not sure if it will work!
-            myfile << "\n";
-            myfile << userToken; //not sure if it will work!
-            myfile << "\n";
-            myfile.close();
+        void newPolicy(){}
+        void saveToAuthFile(){
+            /*
+            Takes in email and password
+            and stores them in AUTH.txt file
+            */
+            fstream myfile;
+            myfile.open("./data/AUTH.txt", fstream::app);
+            if (myfile.is_open())
+            {
+                myfile << email; // not sure if it will work!
+                myfile << "\n";
+                myfile << password; //not sure if it will work!
+                myfile << "\n";
+                myfile.close();
+            }
+            else cout << "Unable to open AUTH file for saving";
         }
-        else cout << "Unable to open TOKEN file for saving";
-    }
+        void saveToTokenFile(){
+            /*
+            Takes in email and token
+            and stores them in TOKEN.txt file
+            */
+            fstream myfile;
+            myfile.open("./data/TOKEN.txt", fstream::app);
+            if (myfile.is_open())
+            {
+                myfile << email; // not sure if it will work!
+                myfile << "\n";
+                myfile << userToken; //not sure if it will work!
+                myfile << "\n";
+                myfile.close();
+            }
+            else cout << "Unable to open TOKEN file for saving";
+        }
 };
+
+void export_userobject(string usertoken, User obj)
+{
+    string path = "./data/" + usertoken + "_userprofile.txt";
+    string line;
+    //create an output stream to write to the file
+    //append the new lines to the end of the file
+
+    /*
+    FORMAT
+    ------
+    name
+    email
+    dob
+    address
+    contactNumber
+    number of policies
+    */
+    fstream myfileI;
+    myfileI.open(path, fstream::app);
+    if (myfileI.is_open())
+    {
+        myfileI << obj.name << endl << obj.email << endl << obj.dob << endl << obj.address << endl << obj.contactNumber << endl << obj.policycount << endl;
+        myfileI.close();
+    }
+    else cout << "Unable to open file for writing";
+}
+
+User import_userobject(string usertoken)
+{
+    User obj;
+    string path = "./data/" + usertoken + ".ros";
+    ifstream ifs(path, ios::binary);
+    cout << sizeof(obj) << endl;
+    ifs.read((char *)&obj, sizeof(obj));
+    cout << obj.name << "...\n";
+    return obj;
+
+}
 
 int authenticateUser(string email, string password)
 {
@@ -356,6 +391,29 @@ int authenticateUser(string email, string password)
         return 0;
     }
     
+    else 
+        cout << "Unable to open AUTH file for authentication";
+}
+
+string getUserToken(string email)
+{
+    fstream myfileO;
+    string emailtmp;
+    string usertoken;
+    myfileO.open("./data/TOKEN.txt");
+    if (myfileO.is_open())
+    {
+        while ( getline (myfileO,emailtmp) )
+        {
+            getline(myfileO, usertoken);
+            if(emailtmp.compare(email)==0)
+            {
+                return usertoken; //authentication success
+            }
+        }
+        myfileO.close();
+        return 0;
+    }
     else 
         cout << "Unable to open AUTH file for authentication";
 }
@@ -390,6 +448,8 @@ void login()
     {
         cout << "Login Successful" << endl;
         // After login activities
+        string usertoken = getUserToken(useremail);
+        User user = import_userobject(usertoken);
         
     }
     else
@@ -402,6 +462,9 @@ void signup()
 {
     // This module is called when user wants to sign up
     User userobj;
+    cout << "----------------------------------------------\n";
+    cout << "***** FILL UP THE USER REGISTRATION FORM *****\n";
+    cout << "----------------------------------------------\n";
     cout << "Enter Your Name: ";
     getline(cin, userobj.name);
     getline(cin, userobj.name);
@@ -419,8 +482,16 @@ void signup()
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // enabling echo
     cout << "\n" ;
     /////////////////////
+    cout << "Enter D.O.B [DDMMYYYY]: ";
+    getline(cin, userobj.dob);
+    cout << "Enter Address: ";
+    getline(cin, userobj.address);
+    cout << "Enter Contact Number: ";
+    getline(cin, userobj.contactNumber);
     userobj.saveToAuthFile();
     userobj.saveToTokenFile();
+    export_userobject(to_string(userobj.userToken), userobj);
+    cout << "REGISTRATION SUCCESSFUL. LOGIN AGAIN TO CONTINUE.\n";
 }
 
 void delay_buffer()
