@@ -12,6 +12,7 @@ Kirti Ojha
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
+#include <ctime>
 #include <unistd.h>
 #include <fstream>
 #include <stdlib.h>     /* srand, rand */
