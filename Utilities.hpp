@@ -1,3 +1,11 @@
+class UserPolicy
+{
+public:
+    int type; //1 for Health, 2 for Life, 3 for Home 
+    double premium;
+    int date[3];
+};
+
 void export_userprofile(string usertoken, User obj)
 {
     string path = "./data/" + usertoken + "_userprofile.txt";
@@ -113,6 +121,40 @@ int getRandomToken()
     return rand() % 900000 + 100000;
 }
 
+int dayDifference(date)
+{
+    /*
+    Calculate difference in terms 
+    of days between the date and today
+    */
+}
+
+void export_policy_data(string userToken, UserPolicy obj)
+{
+    //serialise the data
+    // UserPolicy obj;
+    /*
+    string userToken, int type, double premium, int dd, int mm, int yyyy
+    obj.type = type;
+    obj.premium = premium;
+    obj.date[0] = dd;
+    obj.date[1] = mm;
+    obj.date[2] = yyyy;
+    */
+    string path = "./data/" + userToken + "_userpolicy.ros";
+    ofstream ofs(path, ios::binary);
+    ofs.write((char *)&obj, sizeof(obj));
+}
+
+UserPolicy import_policy_data(string userToken)
+{
+    UserPolicy obj;
+    string path = "./data/" + userToken + "_userpolicy.ros";
+    ifstream ifs(path, ios::binary);
+    ifs.read((char *)&obj, sizeof(obj));
+    return obj;
+}
+
 void login()
 {
     // This method is called when user wants to login
@@ -140,16 +182,35 @@ void login()
         string usertoken = getUserToken(useremail);
         User user = import_userprofile(usertoken); //load user details
         user.showDetails(); //show user details //TODO ACTIVE POLICIES DISPLAY
-        cout << "Do You Want To Create A New Insurance Policy? [Y/N]";
+        cout << "Do You Want To Create A New Insurance Policy? [Y/N] ";
         char newpchoice;
         cin >> newpchoice;
         if(newpchoice=='Y' or newpchoice=='y')
         {
-            if(user.policycount < 3)
+            if(user.policycount < 1)
             {
                 Policy policy;
                 policy.createNewPolicy(stoi(usertoken));
+                UserPolicy obj;
+                obj.type = policy.type;
+                obj.premium = policy.final_premium;
+                for(int i=0;i<3;i++)
+                    obj.date[i] = policy.date[i];
+                // saving to memory data
+                export_policy_data(usertoken, obj);
+                cout << "Thanks for using the service.\n";
             }
+            else
+            {
+                cout << "Sorry. One Policy Per User In This Version\n";
+            }
+        }
+        else
+        {
+            cout << "****Your Insurance Policy Details Below (UNDER CONSTRUCTION)****\n";
+            // loading from memory
+            UserPolicy obj = import_policy_data(usertoken);
+            cout << "Your Premium Initial: " << obj.premium << endl;
         }
     }
     else

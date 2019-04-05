@@ -1,13 +1,25 @@
 class Policy
 {
 public:
-    double healthInsurance(int age,int health_condition,int policy_period,int sum)
+    int type;
+    double final_premium;
+    int date[3];
+    double healthInsurance(int age)
     {
         //returns total premium.
         
         //policy start date store
         
         double prem,ci_prem,tot_prem;
+        int health_condition, policy_period, sum;
+        cout<<"Enter Health Condition (0 to 10) with 10 being the Fittest."<<endl;
+        cin>>health_condition;
+        cout<<"Enter Policy period in months "<<endl;
+        cin>>policy_period;
+        cout<<"Sum Chart = ";
+        cout<<"1,2,3,4,5 (in Lakhs)\n"; 
+        cout<<"Enter Sum Insured: "<<endl;
+        cin>>sum;
         
         
         int prem_age[6][5]= {{1802,2689,3362,4168,4572},
@@ -27,17 +39,17 @@ public:
         double fit_age[10]={0,0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8};
 
         
-        if(age<=17 )
+        if(age<=17)
         {
             prem=prem_age[0][sum-1];
             ci_prem=ci_prem_age[0][sum-1];
         }
-        else if(age >=18 && age<=35 )
+        else if(age >=18 && age<=35)
         {
             prem = prem_age[1][sum-1];
             ci_prem=ci_prem_age[1][sum-1];
         }
-        else if(age >=36 && age<=49 )
+        else if(age >=36 && age<=49)
         {
             prem = prem_age[2][sum-1];
             ci_prem=ci_prem_age[2][sum-1];
@@ -84,22 +96,26 @@ public:
         string termstring[4]={"monthly","quaterly","semi-annually","annually"};
         cin>>term;
         cout<<"Enter amount among the following ranges"<<endl;
-        cout<<"10 lakh ......1 crore in digits"<<endl;
+        cout<<"10 Lakh ......1 Cr. in digits"<<endl;
         cin>>policy_amount;
         if(term==1){
+            cout << "Monthly...\n";
             prem = policy_amount/t;
         }
         else if(term==2){
             t=t/4;
+            cout << "Quarterly...\n";
             prem = policy_amount/(t);
         } 
         else if(term==3){
-                t=t/6;
+            t=t/6;
+            cout << "Semi...\n";
             prem = policy_amount/(t);
             
         }
         else if(term==4){
-                t=t/12;
+            t=t/12;
+            cout << "Annually...\n";
             prem = policy_amount/(t);
             
         }
@@ -171,11 +187,11 @@ public:
             prem = tot_prem/m;
         }
         
-            cout<<"Your monthly  premium is : "<<prem<<"\t for a period of "<<m<<" months "<<endl;
+            cout<<"Your monthly premium is : "<<prem<<"\t for a period of "<<m<<" months "<<endl;
         return prem;
     }
 
-    int createNewPolicy(int user_token)
+    void createNewPolicy(int user_token)
     {
         //if(details exist for user_token)
         //display details 
@@ -183,29 +199,36 @@ public:
         
         bool flag = true;
         int policy_choice,total_premium;
-        cout<<"Enter choice of policy."<<endl;
-        cout<<"1 --> Health"<<endl;
-        cout<<"2 --> Life"<<endl;
-        cout<<"3 --> Home"<<endl;
-        cout<<"Choice :";
+        cout<<"Enter Choice Of Policy"<<endl;
+        cout<<"1 --> Health Insurance"<<endl;
+        cout<<"2 --> Life Insurance"<<endl;
+        cout<<"3 --> Home Insurance"<<endl;
+        cout<<"Enter Choice : ";
         cin>>policy_choice;
+        type = policy_choice;
 
-        cout << "Enter Age Of Applicant: " << endl;
+        cout << "Enter Date Of Policy Creation [DD MM YYYY]: ";
+        cin >> date[0];
+        cin >> date[1];
+        cin >> date[2];
+        cout << "Date Noted : " << date[0] << "/" << date[1] << "/" << date[2] << "\n";
+
+        cout << "Enter Age Of Applicant: ";
         cin>>age;
         if(age>=86 && policy_choice==1)
             {
                 cout<<"You do not qualify for health insurance."<<endl; 
-                return 0;
+                return;
             }
         if(age>=51 && policy_choice==2)
             {
                 cout<<"You do not qualify for life insurance."<<endl;   
-                return 0;
+                return;
             }
         if(age>=71 && policy_choice==3)
             {
                 cout<<"You do not qualify for home insurance."<<endl;   
-                return 0;
+                return;
             }
         
             
@@ -213,39 +236,29 @@ public:
         {
             switch(policy_choice)
             {
-                case 1: 
-                    
-                    cout<<"Enter health condition (0 to 10)  10 being the fittest."<<endl;
-                    cin>>health_condition;
-            
-                    cout<<"Enter Policy period in months "<<endl;
-                    cin>>policy_period;
-                    cout<<"Sum Chart : "<<endl;
-                    cout<<"1 lakh , 2 lakh , 3 lakh ,4 lakh ,5 lakh"<<endl; 
-                    cout<<"Enter sum insured"<<endl;
-                    cin>>sum;
-             
-                    cout<<"CRITICAL ILLNESS RIDER = 100!"<<endl;
-                    total_premium=healthInsurance(age,health_condition,policy_period,sum);
-                    
+                case 1:              
+                    //cout<<"CRITICAL ILLNESS RIDER = 100!"<<endl; //meaning ?????????????????
+                    total_premium=healthInsurance(age);
                     flag=false;
+                    final_premium = total_premium;
                     break;
                     
                     
                 case 2:  total_premium=lifeInsurance(age);
-                
                     flag=false;
+                    final_premium = total_premium;
                     break;
                     
                 case 3:
-                        cout<<"Enter Policy period in years or enter -9 for indefinite policy period "<<endl;
-                        cin>>policy_period;
-                        total_premium = homeInsurance(policy_period,age);
-                        flag=false;
-                        break;
+                    cout<<"Enter Policy period in years or enter -9 for indefinite policy period "<<endl;
+                    cin>>policy_period;
+                    total_premium = homeInsurance(policy_period,age);
+                    final_premium = total_premium;
+                    flag=false;
+                    break;
                     
                 default:
-                    cout<<"Does not exist.Try again.";
+                    cout<<"Does Not Exist.Try Again.";
             }
         }
     }
