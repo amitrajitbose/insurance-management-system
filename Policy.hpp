@@ -12,9 +12,9 @@ public:
         
         double prem,ci_prem,tot_prem;
         int health_condition, policy_period, sum;
-        cout<<"Enter Health Condition (0 to 10) with 10 being the Fittest."<<endl;
+        cout<<"Enter Health Condition (0 to 10) with 10 being the Fittest.:";
         cin>>health_condition;
-        cout<<"Enter Policy period in months "<<endl;
+        cout<<"Enter Policy period (in months): ";
         cin>>policy_period;
         cout<<"Sum Chart = ";
         cout<<"1,2,3,4,5 (in Lakhs)\n"; 
@@ -95,8 +95,8 @@ public:
         cout<<"4 --> Annually"<<endl;
         string termstring[4]={"monthly","quaterly","semi-annually","annually"};
         cin>>term;
-        cout<<"Enter amount among the following ranges"<<endl;
-        cout<<"10 Lakh ......1 Cr. in digits"<<endl;
+        cout<<"Enter Amount within the following ranges"<<endl;
+        cout<<"10 Lakh ....1 Cr. in digits:";
         cin>>policy_amount;
         if(term==1){
             cout << "Monthly...\n";
@@ -122,7 +122,7 @@ public:
         else{
             return 0.0;
         }
-        cout<<"Your "<<termstring[term-1]<<" premium is : "<<prem<<"\t for a period of "<<t<<" times "<<termstring[term-1]<<endl;
+        cout<<"Your "<<termstring[term-1]<<" premium is : "<<prem<<" for a period of "<<t<<" times "<<termstring[term-1]<<endl;
         return prem;
     }
 
@@ -132,22 +132,22 @@ public:
         double tot_prem,prem;
         const double dep = 0.15;
 
-        cout<<"Is your flat rented(r) or owned(o)?"<<endl;
+        cout<<"Is your flat rented(r) or owned(o)? ";
         cin>>own_rent;
         if(own_rent=='r')
         {
             int content_price;
-            cout<<"Enter total value of contents : "<<endl;
+            cout<<"Enter total value of contents : ";
             cin>>content_price;
             tot_prem=content_price*11; 
         }
 
         else
         {
-        cout<<"Do you own a flat(f) or bungalow(b)?"<<endl;
+        cout<<"Do you own a flat(f) or bungalow(b)? ";
         cin>>flat_bung;
         
-        cout<<"Age of flat/building?"<<endl;
+        cout<<"Age of flat/building? ";
         cin>>house_age; 
         if(house_age<=30)
         
@@ -155,24 +155,24 @@ public:
             
             if(flat_bung=='f' )
             {
-                cout<<"Enter sqft area of flat : "<<endl; 
+                cout<<"Enter sqft area of flat : "; 
                 cin>>sqft;
-                cout<<"Enter cost of construction per sqft area of flat : "<<endl; 
+                cout<<"Enter cost of construction per sqft area of flat : "; 
                 cin>>cost_sqft;
                 tot_prem = sqft*cost_sqft-dep*house_age;
             }
             if(flat_bung=='b' )
             {
-                cout<<"Enter built area : "<<endl; 
+                cout<<"Enter Built Area: "; 
                 cin>>sqft;
-                cout<<"Enter cost of construction  "<<endl; 
+                cout<<"Enter Cost of construction: "; 
                 cin>>cost_sqft;
                 tot_prem = sqft*cost_sqft-dep*house_age;
             }
         }
         else
         {
-            cout<<"You do not qualify for home insurance."<<endl;
+            cout<<"You Do Not Qualify for Home Insurance."<<endl;
             return 0;
         }
         }
@@ -187,7 +187,7 @@ public:
             prem = tot_prem/m;
         }
         
-            cout<<"Your monthly premium is : "<<prem<<"\t for a period of "<<m<<" months "<<endl;
+            cout<<"Your Monthly Premium is : "<< prem <<" for a period of "<< m <<" months "<<endl;
         return prem;
     }
 

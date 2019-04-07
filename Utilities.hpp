@@ -181,14 +181,6 @@ void export_policy_data(string userToken, UserPolicy obj)
 {
     //serialise the data
     // UserPolicy obj;
-    /*
-    string userToken, int type, double premium, int dd, int mm, int yyyy
-    obj.type = type;
-    obj.premium = premium;
-    obj.date[0] = dd;
-    obj.date[1] = mm;
-    obj.date[2] = yyyy;
-    */
     string path = "./data/" + userToken + "_userpolicy.ros";
     ofstream ofs(path, ios::binary);
     ofs.write((char *)&obj, sizeof(obj));
@@ -260,8 +252,9 @@ void login()
             if(user.policycount)
             {
                 UserPolicy obj = import_policy_data(usertoken);
-                cout << "Your Premium Initial: " << obj.premium << endl;
-                int daydiff = getDifference(obj.date);
+                cout << "Your Initial Premium: " << obj.premium << endl;
+                double months = getDifference(obj.date)/30;
+
             }
             else
             {
