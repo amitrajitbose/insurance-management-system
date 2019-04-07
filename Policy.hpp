@@ -4,6 +4,7 @@ public:
     int type;
     double final_premium;
     int date[3];
+    double policy_prd; 
     double healthInsurance(int age)
     {
         //returns total premium.
@@ -18,7 +19,7 @@ public:
         cin>>policy_period;
         cout<<"Sum Chart = ";
         cout<<"1,2,3,4,5 (in Lakhs)\n"; 
-        cout<<"Enter Sum Insured: "<<endl;
+        cout<<"Enter Sum Insured: ";
         cin>>sum;
         
         
@@ -79,6 +80,7 @@ public:
         //store total prem. deatils to show currentdate-startdate= months already paid. rem = (policy_period-monthspaid)
         
         cout<<"Your total premium is : "<<tot_prem<<"\t for a period of "<<policy_period<<" month(s) "<<endl;
+        policy_prd = policy_period;
         return tot_prem;
     }
 
@@ -123,6 +125,7 @@ public:
             return 0.0;
         }
         cout<<"Your "<<termstring[term-1]<<" premium is : "<<prem<<" for a period of "<<t<<" times "<<termstring[term-1]<<endl;
+        policy_prd = t;
         return prem;
     }
 
@@ -188,6 +191,7 @@ public:
         }
         
             cout<<"Your Monthly Premium is : "<< prem <<" for a period of "<< m <<" months "<<endl;
+            policy_prd = m;
         return prem;
     }
 

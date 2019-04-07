@@ -4,6 +4,7 @@ public:
     int type; //1 for Health, 2 for Life, 3 for Home 
     double premium;
     int date[3];
+    double polpd; //policy period
 };
 
 void export_userprofile(string usertoken, User obj)
@@ -24,7 +25,7 @@ void export_userprofile(string usertoken, User obj)
     policycount
     */
     fstream myfileI;
-    myfileI.open(path, fstream::app);
+    myfileI.open(path, fstream::out);
     if (myfileI.is_open())
     {
         myfileI << obj.name << endl << obj.email << endl << obj.dob << endl << obj.address << endl << obj.contactNumber << endl << obj.policycount << endl;
@@ -234,15 +235,18 @@ void login()
                 UserPolicy obj;
                 obj.type = policy.type;
                 obj.premium = policy.final_premium;
+                obj.polpd = policy.policy_prd;
                 for(int i=0;i<3;i++)
                     obj.date[i] = policy.date[i];
                 // saving to memory data
+                user.policycount = 1;
+                export_userprofile(usertoken, user);
                 export_policy_data(usertoken, obj);
                 cout << "Thanks for using the service.\n";
             }
             else
             {
-                cout << "Sorry. One Policy Per User In This Version\n";
+                cout << "Sorry. One Policy Per User In This Version\nLogging you out ...\n";
             }
         }
         else
@@ -254,12 +258,28 @@ void login()
                 UserPolicy obj = import_policy_data(usertoken);
                 cout << "Your Initial Premium: " << obj.premium << endl;
                 double months = getDifference(obj.date)/30;
+                double payable = (obj.polpd - months)*obj.premium;
+                if(payable>0)
+                    cout << "Current Amount Payable: " << payable << endl;
+                else
+                    cout << "Current Amount Payable: NIL (All Paid)" << endl;
 
+                // delete policy
+                int deletechoice = 0;
+                cout << "Do You Want To Delete The Insurance Policy? (Yes=1 / No=0): ";
+                cin >> deletechoice;
+                if(deletechoice==1)
+                {
+                    user.policycount = 0;
+                    export_userprofile(usertoken, user);
+                }
+                cout << "Thanks for using the service.\n";
+                cout << "Logging you out ...\n";
             }
             else
             {
                 cout << "No Insurance Policy Registered Yet" << endl;
-                cout << "Logging you out..." << endl;
+                cout << "Logging you out ..." << endl;
             }
         }
     }
