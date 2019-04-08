@@ -329,7 +329,7 @@ void delay_buffer()
 {
     // This module is called when closing the program, to generate a small pause
     int dummy = 0;
-    for(int i=0;i<180000000;i++)
+    for(int i=0;i<280000000;i++)
     {
         //just a time buffer, to make exit look real
         dummy = ~dummy;

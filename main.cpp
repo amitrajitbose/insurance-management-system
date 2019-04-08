@@ -11,10 +11,10 @@ Kirti Ojha
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <termios.h>
-#include <ctime>
+#include <termios.h>    /*For terminal echo muting*/
 #include <unistd.h>
-#include <fstream>
+#include <ctime>
+#include <fstream>      /*file handling*/
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 using namespace std;
